@@ -14,8 +14,6 @@ def clean_and_solve(text):
     text = text.replace("into", "*")
     text = text.replace("over", "/")
     text = text.replace("x", "*")
-    text = text.replace("plus", "+")
-    text = text.replace("minus", "-")
     text = text.replace("what is", "")
     text = text.replace("calculate", "")
     text = text.replace("can you", "")
