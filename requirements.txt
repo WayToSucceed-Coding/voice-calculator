@@ -1,6 +1,6 @@
 streamlit
-SpeechRecognition
-PyAudio
+speechrecognition
+
 
 
 
