@@ -14,12 +14,15 @@ def clean_and_solve(text):
     text = text.replace("into", "*")
     text = text.replace("over", "/")
     text = text.replace("x", "*")
+    text = text.replace("plus", "+")
+    text = text.replace("minus", "-")
     text = text.replace("what is", "")
     text = text.replace("calculate", "")
     text = text.replace("can you", "")
     text = text.replace("solve", "")
     text = text.replace("please", "")
     st.code(f"Expression: {text}")
+
     try:
         result = eval(text)
         st.success(f"Result: {result}")
@@ -33,28 +36,25 @@ with col1:
 with col2:
     st.markdown(
         """
-        Press the button and say something like:
+        Click the mic and say something like:
         - `three plus five`
         - `twelve divided by four`
         - `seven times nine`
         """
-        )
+    )
     
-    if st.button("🎤 Start Voice Input"):
+    audio_file = st.audio_input("Say your calculation out loud")
+    
+    if audio_file is not None:
         recognizer = sr.Recognizer()
         
-        with st.spinner("🎤 Listening... Please speak clearly"):
-            with sr.Microphone() as source:
-                try:
-                    audio = recognizer.listen(source, timeout=5)
-                    spoken_text = recognizer.recognize_google(audio)
-                    st.success(f"You said: {spoken_text}")
-                    clean_and_solve(spoken_text)
-                except sr.WaitTimeoutError:
-                    st.warning("Listening timed out. Please try again.")
-                except sr.UnknownValueError:
-                    st.warning("Sorry, couldn't understand. Please try again.") 
-                except Exception as e:
-                    st.error(f"Error: {e}")
-
-   
+        with sr.AudioFile(audio_file) as source:
+            audio = recognizer.record(source)
+            try:
+                spoken_text = recognizer.recognize_google(audio)
+                st.success(f"You said: {spoken_text}")
+                clean_and_solve(spoken_text)
+            except sr.UnknownValueError:
+                st.warning("Sorry, couldn't understand. Please try again.") 
+            except Exception as e:
+                st.error(f"Error: {e}")
